@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <title>ひらがなドラッグゲーム</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <main class="app">
+        <header class="topbar">
+            <h1 class="title">ひらがな ドラッグゲーム</h1>
+            <button id="nextButton" class="next-button" type="button">つぎへ</button>
+        </header>
+
+        <section class="card question-card">
+            <div class="label">おだい</div>
+            <div id="questionText" class="question-text">よみこみちゅう…</div>
+        </section>
+
+        <section class="card answer-card">
+            <div class="label">こたえ</div>
+            <div id="answerSlots" class="answer-slots" aria-label="こたえエリア"></div>
+            <div class="hint">したの もじ を うえへ はこんでね</div>
+        </section>
+
+        <section id="stage" class="stage" aria-label="もじステージ"></section>
+
+        <div id="toast" class="toast" aria-hidden="true"></div>
+        <div id="celebration" class="celebration" aria-hidden="true"></div>
+    </main>
+
+    <script src="./app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,291 @@
+:root {
+    --bg1: #fffaf2;
+    --bg2: #fef6ff;
+    --card: rgba(255, 255, 255, 0.92);
+    --line: #eadff5;
+    --text: #5b4b66;
+    --sub: #8a7a96;
+    --accent: #ffb7d5;
+    --accent-2: #ffd86b;
+    --ok: #8be28b;
+    --slot: #fff;
+    --shadow: 0 10px 30px rgba(120, 90, 140, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family:
+        "Hiragino Maru Gothic ProN",
+        "Yu Gothic",
+        "Meiryo",
+        sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top left, #fff2bf 0%, transparent 30%),
+        radial-gradient(circle at top right, #ffd7eb 0%, transparent 30%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    overflow: hidden;
+    touch-action: none;
+}
+
+.app {
+    width: 100%;
+    min-height: 100dvh;
+    padding:
+        max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)) 12px;
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    gap: 12px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.title {
+    margin: 0;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.next-button {
+    border: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: 700;
+    background: linear-gradient(180deg, #fff, #ffe8f3);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+.next-button:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.card {
+    background: var(--card);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sub);
+    margin-bottom: 8px;
+}
+
+.question-text {
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+
+.answer-slots {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 76px;
+    padding: 8px 4px;
+}
+
+.answer-slot {
+    width: clamp(56px, 12vw, 76px);
+    height: clamp(56px, 12vw, 76px);
+    border-radius: 20px;
+    background: var(--slot);
+    border: 3px dashed #ebdff5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(26px, 6vw, 38px);
+    font-weight: 800;
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    position: relative;
+}
+
+.answer-slot.filled {
+    border-style: solid;
+    border-color: #e2c8ff;
+    background: #fff9ff;
+}
+
+.answer-slot.over {
+    transform: scale(1.06);
+    background: #fff7cc;
+    border-color: #ffd86b;
+}
+
+.hint {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--sub);
+}
+
+.stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.25)),
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.65), transparent 20%),
+        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.55), transparent 24%);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.65), var(--shadow);
+    min-height: 240px;
+}
+
+.floating-char {
+    position: absolute;
+    width: clamp(58px, 11vw, 78px);
+    height: clamp(58px, 11vw, 78px);
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(30px, 6vw, 42px);
+    font-weight: 800;
+    color: #5c4865;
+    background:
+        radial-gradient(circle at 30% 25%, #ffffff 0%, #fff4fb 45%, #ffe0ef 100%);
+    box-shadow:
+        0 8px 16px rgba(120, 90, 140, 0.14),
+        inset 0 2px 0 rgba(255, 255, 255, 0.75);
+    user-select: none;
+    touch-action: none;
+    cursor: grab;
+    transform: translate(0, 0) scale(1);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.floating-char.dragging {
+    cursor: grabbing;
+    transform: scale(1.08);
+    box-shadow:
+        0 14px 24px rgba(120, 90, 140, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.8);
+    z-index: 50 !important;
+}
+
+.floating-char.used {
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+.answer-chip {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    border-radius: inherit;
+    font: inherit;
+    color: inherit;
+}
+
+.answer-chip:active {
+    transform: scale(0.96);
+}
+
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(91, 75, 102, 0.92);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 200;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.celebration {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 150;
+}
+
+.celebration-item {
+    position: absolute;
+    top: -10%;
+    font-size: clamp(28px, 4vw, 40px);
+    animation: fall 1200ms ease-in forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(120dvh) rotate(240deg) scale(1.1);
+        opacity: 0;
+    }
+}
+
+.answer-card.correct {
+    animation: popOk 420ms ease;
+    box-shadow: 0 0 0 6px rgba(139, 226, 139, 0.18), var(--shadow);
+}
+
+@keyframes popOk {
+    0% {
+        transform: scale(1);
+    }
+
+    35% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (min-width: 900px) {
+    .app {
+        max-width: 920px;
+        margin: 0 auto;
+    }
+
+    .stage {
+        min-height: 360px;
+    }
+}
