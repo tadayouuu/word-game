@@ -237,7 +237,6 @@ function bindDrag(obj) {
         e.preventDefault();
         el.setPointerCapture(e.pointerId);
 
-        const stageRect = stage.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
 
         state.dragging = {
@@ -246,10 +245,19 @@ function bindDrag(obj) {
             pointerId: e.pointerId,
             offsetX: e.clientX - elRect.left,
             offsetY: e.clientY - elRect.top,
-            stageRect
+            fromStage: {
+                x: obj.x,
+                y: obj.y
+            }
         };
 
         el.classList.add("dragging");
+
+        // ドラッグ中は画面基準で動かす
+        el.style.position = "fixed";
+        el.style.left = `${elRect.left}px`;
+        el.style.top = `${elRect.top}px`;
+        el.style.zIndex = "9999";
     });
 
     el.addEventListener("pointermove", (e) => {
@@ -257,12 +265,11 @@ function bindDrag(obj) {
         if (state.dragging.id !== obj.id) return;
         if (state.dragging.pointerId !== e.pointerId) return;
 
-        const stageRect = stage.getBoundingClientRect();
-        state.dragging.stageRect = stageRect;
+        const newLeft = e.clientX - state.dragging.offsetX;
+        const newTop = e.clientY - state.dragging.offsetY;
 
-        obj.x = clamp(e.clientX - stageRect.left - state.dragging.offsetX, 0, stageRect.width - obj.size);
-        obj.y = clamp(e.clientY - stageRect.top - state.dragging.offsetY, 0, stageRect.height - obj.size);
-        placeCharElement(obj);
+        el.style.left = `${newLeft}px`;
+        el.style.top = `${newTop}px`;
 
         updateSlotHover(e.clientX, e.clientY);
     });
@@ -281,6 +288,21 @@ function bindDrag(obj) {
         }
 
         el.classList.remove("dragging");
+
+        if (!obj.used) {
+            // ステージ内に戻す
+            el.style.position = "absolute";
+            el.style.zIndex = "";
+            obj.x = state.dragging.fromStage.x;
+            obj.y = state.dragging.fromStage.y;
+            placeCharElement(obj);
+        } else {
+            // 使用済みなら見えなくてOK
+            el.style.position = "absolute";
+            el.style.zIndex = "";
+            placeCharElement(obj);
+        }
+
         state.dragging = null;
     };
 
